@@ -21,8 +21,11 @@ wss.on('connection', (ws) => {
                 const chunkId = getChunkIdFromPlot(data.plot_x, data.plot_y);
                 
                 for (let [client, sub] of clients.entries()) {
-                    if (client !== ws && client.readyState === 1 && sub === chunkId) {
-                        client.send(JSON.stringify(data));
+                    if (client !== ws && client.readyState === 1) {
+                        // Deliver to the specific chunk OR to the World Map
+                        if (sub === chunkId || sub === "global") {
+                            client.send(JSON.stringify(data));
+                        }
                     }
                 }
             }
