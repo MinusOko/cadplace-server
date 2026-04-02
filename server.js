@@ -3,6 +3,7 @@ const { WebSocketServer } = require('ws');
 const port = process.env.PORT || 8080; 
 const wss = new WebSocketServer({ port: port });
 
+
 const clients = new Map();
 
 wss.on('connection', (ws) => {
@@ -25,7 +26,8 @@ wss.on('connection', (ws) => {
                     if (client === ws) continue;
                     if (client.readyState !== 1) continue;
                     if (sub === "") continue;
-                    if (sub === chunkId) {
+
+                    if (sub === chunkId || sub === "world") {
                         client.send(JSON.stringify(data));
                     }
                 }
