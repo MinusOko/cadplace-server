@@ -18,7 +18,7 @@ wss.on('connection', (ws) => {
                 clients.set(ws, chunk_id);
                 console.log(`Client subscribed to chunk: ${chunk_id}`);
             } 
-            else if (data.type === 'edit_plot') {
+            else if (data.type === 'edit_plot' || data.type === 'claim_plot') {
                 for (let [client, sub] of clients.entries()) {
                     if (client === ws) continue;
                     if (client.readyState !== 1) continue;
