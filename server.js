@@ -22,6 +22,13 @@ wss.on('connection', (ws) => {
                 for (let lockData of claimLocks.values()) {
                     ws.send(JSON.stringify(lockData));
                 }
+                
+                for (let [client, sub] of clients.entries()) {
+                    if (client === ws) continue;
+                    if (client.readyState === 1 && sub !== "") {
+                        client.send(JSON.stringify(data));
+                    }
+                }
             } 
             else if (data.type === 'edit_plot' || data.type === 'claim_plot' || data.type === 'unclaim_plot') {
                 if (data.type === 'claim_plot') {
