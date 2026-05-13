@@ -23,10 +23,11 @@ wss.on('connection', (ws) => {
                     ws.send(JSON.stringify(lockData));
                 }
                 
+                const stringifiedData = JSON.stringify(data);
                 for (let [client, sub] of clients.entries()) {
                     if (client === ws) continue;
                     if (client.readyState === 1 && sub !== "") {
-                        client.send(JSON.stringify(data));
+                        client.send(stringifiedData);
                     }
                 }
             } 
@@ -37,11 +38,12 @@ wss.on('connection', (ws) => {
                     claimLocks.delete(ws);
                 }
 
+                const stringifiedData = JSON.stringify(data);
                 for (let [client, sub] of clients.entries()) {
                     if (client === ws) continue;
                     if (client.readyState !== 1) continue;
                     if (sub === "") continue;
-                    client.send(JSON.stringify(data));
+                    client.send(stringifiedData);
                 }
             }
         } catch (e) {
@@ -54,9 +56,10 @@ wss.on('connection', (ws) => {
             const lockData = claimLocks.get(ws);
             lockData.type = 'unclaim_plot';
             
+            const stringifiedUnclaim = JSON.stringify(lockData);
             for (let [client, sub] of clients.entries()) {
                 if (client.readyState === 1 && sub !== "") {
-                    client.send(JSON.stringify(lockData));
+                    client.send(stringifiedUnclaim);
                 }
             }
             claimLocks.delete(ws);
